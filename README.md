@@ -112,3 +112,9 @@
 6. Delete works_on records for employees in KW
 
 ---
+## 📦 Download IKEA_Company_DB
+
+If you'd like to use the **IKEA_Company_DB** for practicing the Views section, you can download it from the link below:
+
+🔗 [Download IKEA DB](https://drive.google.com/file/d/1WULxidId0fJwl6-4eSraZoqAFSAd_LbZ/view?usp=sharing)
+
