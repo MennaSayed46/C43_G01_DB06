@@ -70,46 +70,82 @@
 
 ---
 
-## 📁 Part 03 – RouteCompany DB (Created by Wizard)
+## 📌 Part 03: RouteCompany DB (Create via Wizard)
 
-### 1. Tables (with constraints)
-- Department: PK = DeptNo  
-- Employee:
-  - PK = EmpNo
-  - FK = DeptNo
-  - UNIQUE(Salary)
-  - NOT NULL(Fname, Lname)
-- Project:
-  - PK = ProjectNo
-  - NOT NULL(ProjectName)
-  - NULL allowed in Budget
-- Works_on:
-  - Composite PK = (EmpNo, ProjectNo)
-  - FK to Employee & Project
-  - Job: NULL allowed
-  - Enter_Date: NOT NULL + default = GETDATE()
+### 1. Tables
 
-#### 🔍 Testing Referential Integrity:
-1. Insert EmpNo = 11111 in works_on → should fail if Emp doesn't exist
-2. Change EmpNo = 10102 to 11111 in works_on → FK violation
-3. Modify EmpNo = 10102 in employee to 22222 → FK conflict
-4. Delete employee 10102 → FK conflict
+#### 📌 Department
+
+| DeptNo | DeptName   | Location |
+|--------|------------|----------|
+| d1     | Research   | NY       |
+| d2     | Accounting | DS       |
+| d3     | Marketing  | KW       |
+
+➡ Create programmatically with `DeptNo` as **Primary Key**
 
 ---
 
-### 2. Schemas
-- Schema: `Company`
-  - Tables: Department, Project
-- Schema: `HumanResource`
-  - Table: Employee
+#### 📌 Employee
+
+Fields:
+- EmpNo (PK)
+- EmpFname (NOT NULL)
+- EmpLname (NOT NULL)
+- DeptNo (FK to Department.DeptNo)
+- Salary (UNIQUE)
+
+➡ Constraints:
+- PK on `EmpNo`
+- FK on `DeptNo`
+- UNIQUE on `Salary`
+- `EmpFname`, `EmpLname` NOT NULL
 
 ---
 
-### 3–6. Business Logic Updates
-3. Increase Budget for project where manager = 10102 by 10%
-4. Change department name for employee James → "Sales"
-5. Change Enter_Date to 12/12/2007 for employees in project p1 + Sales dept
-6. Delete works_on records for employees in KW
+#### 📌 Project
+
+| ProjectNo | ProjectName | Budget   |
+|-----------|-------------|----------|
+| p1        | Apollo      | 120000   |
+| p2        | Gemini      | 95000    |
+| p3        | Mercury     | 185600   |
+
+➡ Create using **wizard**
+- `ProjectName` NOT NULL
+- `Budget` allows NULL
+
+---
+
+#### 📌 Works_on
+
+Fields:
+- EmpNo (PK, FK to Employee)
+- ProjectNo (PK, FK to Project)
+- Job (NULL allowed)
+- Enter_Date (NOT NULL, default = GETDATE())
+
+➡ Notes:
+- Composite Primary Key: (`EmpNo`, `ProjectNo`)
+- `Enter_Date` has default system date (set visually)
+- Has FK to both `Employee` and `Project`
+
+---
+
+### 2. Referential Integrity Testing
+
+1. Try inserting EmpNo = 11111 in `works_on` without existing in `employee` → ❌ Fails
+2. Change `EmpNo` in `works_on` from 10102 to 11111 → ❌ FK violation
+3. Change `EmpNo` in `employee` from 10102 to 22222 → ❌ Affects `works_on` if no cascading
+4. Delete `EmpNo = 10102` from `employee` → ❌ Error if referenced
+
+---
+
+### 3. Table Modifications
+
+- ➕ Add column:
+  ```sql
+  ALTER TABLE Employee ADD TelephoneNumber VARCHAR(20);
 
 ---
 ## 📦 Download IKEA_Company_DB
