@@ -1,0 +1,3 @@
+*.sql linguist-language=TSQL
+
+force GitHub to detect TSQL
