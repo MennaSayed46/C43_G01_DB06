@@ -164,7 +164,7 @@ GO
 
 select * from dbo.getStudentName('full name')
 
---Note: Use “ISNULL” function 
+--Note: Use â€œISNULLâ€ function 
 --7. Create function that takes project number and display all employees in this project 
 --(Use MyCompany DB) 
 --inlined tabled valued
@@ -216,8 +216,8 @@ AS
 GO
 
 
---3. Create a view that will display Instructor Name, Department Name for the ‘SD’ or ‘Java’ 
---Department “use Schema binding” and describe what is the meaning of Schema Binding 
+--3. Create a view that will display Instructor Name, Department Name for the â€˜SDâ€™ or â€˜Javaâ€™ 
+--Department â€œuse Schema bindingâ€ and describe what is the meaning of Schema Binding 
 GO
 Create schema binding
 GO
@@ -231,10 +231,10 @@ AS
 GO
 
 
---4.  Create a view “V1” that displays student data for students who live in Alex or Cairo.  
+--4.  Create a view â€œV1â€ that displays student data for students who live in Alex or Cairo.  
 --Note: Prevent the users to run the following query  
---Update V1 set st_address=’tanta’ 
---Where st_address=’alex’;
+--Update V1 set st_address=â€™tantaâ€™ 
+--Where st_address=â€™alexâ€™;
 GO
 create or alter view V1
 with encryption
@@ -264,7 +264,7 @@ AS
 GO
 
 --use IKEA_Company_DB:
---1. Create a view named “v_clerk” that will display employee Number, project Number, the 
+--1. Create a view named â€œv_clerkâ€ that will display employee Number, project Number, the 
 --date of hiring of all the jobs of the type 'Clerk'.
 
 use IKEA_Company
@@ -278,7 +278,7 @@ AS
 
 GO
 
---2.Create view named  “v_without_budget” that will display all the projects data without budget 
+--2.Create view named  â€œv_without_budgetâ€ that will display all the projects data without budget 
 GO
 create or alter view v_without_budget
 with encryption
@@ -292,7 +292,7 @@ GO
 SELECT * FROM v_without_budget
 GO
 
---3. Create view named  “v_count “ that will display the project name and the Number of jobs in it 
+--3. Create view named  â€œv_count â€œ that will display the project name and the Number of jobs in it 
 GO
 create or alter view v_count
 with encryption
@@ -303,8 +303,8 @@ AS
 	group by p.ProjectName
 GO
 
---4.  Create a view named” v_project_p2” that will display the emp# s for the project# ‘p2’. 
---(use the previously created view  “v_clerk”) 
+--4.  Create a view namedâ€ v_project_p2â€ that will display the emp# s for the project# â€˜p2â€™. 
+--(use the previously created view  â€œv_clerkâ€) 
 
 GO
 create or alter view v_project_p2
@@ -316,7 +316,7 @@ AS
 
 GO
 
---5. modify the view named “v_without_budget” to display all DATA in project p1 and p2.
+--5. modify the view named â€œv_without_budgetâ€ to display all DATA in project p1 and p2.
 
 GO 
  alter view v_without_budget
@@ -326,12 +326,12 @@ AS
 	from HR.Project P
 GO
 
---6. Delete the views  “v_ clerk” and “v_count”
+--6. Delete the views  â€œv_ clerkâ€ and â€œv_countâ€
 drop view v_clerk
 drop view v_count
 
 --7. Create view that will display the emp# and emp last name who works on deptNumber is 
---‘d2’
+--â€˜d2â€™
 GO
 create or alter view getEmpNumInDept2
 with encryption
@@ -343,7 +343,7 @@ AS
 
 GO
 
---8. Display the employee  lastname that contains letter “J” (Use the previous view created in 
+--8. Display the employee  lastname that contains letter â€œJâ€ (Use the previous view created in 
 --Q#7)
 
 GO 
@@ -355,7 +355,7 @@ AS
 	where EmpLname like '%j%' with check option
 GO
 
---9. Create view named “v_dept” that will display the department# and department name
+--9. Create view named â€œv_deptâ€ that will display the department# and department name
 GO
 create or alter view getDeptData
 WITH ENCRYPTION
@@ -364,12 +364,12 @@ AS
 	from Department D
 GO
 
---10. using the previous view try enter new department data where dept# is ’d4’ and dept 
---name is ‘Development’        => one table 
+--10. using the previous view try enter new department data where dept# is â€™d4â€™ and dept 
+--name is â€˜Developmentâ€™        => one table 
 insert into dbo.getDeptData
 values(4,'Development')
 
---11. Create view name “v_2006_check” that will display employee Number, the project 
+--11. Create view name â€œv_2006_checkâ€ that will display employee Number, the project 
 --Number where he works and the date of joining the project which must be from the first 
 --of January and the last of December 2006.this view will be used to insert data so make 
 --sure that the coming new data must match the condition    => with check option
@@ -460,6 +460,82 @@ where EmpN=10102
 
 --4-Delete the employee with id 10102 
 
-USE [RouteCompany];
-GO
-ALTER AUTHORIZATION ON DATABASE::[RouteCompany] TO [LAPTOP-GNOG31DT\menna sayed];
+delete from Employees
+where EmpN = 10102  
+
+--1-Add  TelephoneNumber column to the employee 
+--table[programmatically] 
+alter table Employees
+add telephoneNumber int
+
+--2-drop this column[programmatically] 
+alter table Employees
+drop column telephoneNumber
+
+
+--2. Create the following schema and transfer the following tables to it  
+-- . Company Schema  
+-- . Department table  
+-- . Project table  
+-- . Human Resource Schema 
+-- .   Employee table
+go
+create schema Company
+go
+alter schema Company
+transfer [dbo].[Department]
+
+alter schema Company
+transfer [dbo].[Projects]
+
+go
+create schema [Human Resource]
+go
+
+alter schema [Human Resource]
+transfer [dbo].[Employees]
+
+
+
+--3. Increase the budget of the project where the manager number is 10102 by 10%. 
+
+UPDATE [Company].[Projects]
+SET Budget = Budget * 1.1
+WHERE ProjectNo IN (
+    SELECT ProjectNo
+    FROM [dbo].[Works_On]
+    WHERE EmpN = 10102
+);
+
+--4.Change the name of the department for which the employee named James works.The 
+--new department name is Sales.
+
+update [Company].[Department]
+set deptName ='Sales'
+where deptNo in (
+				select [Human Resource].[Employees].DeptN
+				from  	[Human Resource].[Employees]
+				where [Human Resource].[Employees].[Emp Fname] ='James'
+						)
+--5. Change the enter date for the projects for those employees who work in project p1 
+--and belong to department â€˜Salesâ€™. The new date is 12.12.2007. 
+
+update Works_On
+set Enter_Date='12.12.2007'
+where ProjectNo='p1' AND EmpN  IN(
+							select EmpN
+							from [Human Resource].[Employees] inner join [Company].[Department]
+							on deptNo=DeptN
+							where DeptName='sales')
+
+
+--6. Delete the information in the works_on table for all employees who work for the 
+--department located in KW. 
+
+delete from Works_On
+where EmpN in (
+select EmpN
+from [Human Resource].[Employees] inner join [Company].[Department]
+ON DeptN = deptNo
+where Location='KW'
+)
